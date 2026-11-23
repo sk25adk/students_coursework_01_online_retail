@@ -30,6 +30,20 @@ WHENEVER SQLERROR EXIT FAILURE ROLLBACK
 BEGIN
     DBMS_SESSION.SET_IDENTIFIER('COURSEWORK_TASK01');
     -- TODO: implement Task 1 below this session block using only supplied base objects.
+
+
+
+
+
 END;
 /
+
+CREATE OR REPLACE VIEW RT01_ClearancePrices AS
+SELECT
+    ProductCode,
+    Price
+FROM RT01_PriceCard
+WHERE Clearance = 1
+  AND Price <= 20;
+
 

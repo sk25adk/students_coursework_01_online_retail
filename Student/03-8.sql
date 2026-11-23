@@ -32,3 +32,27 @@ BEGIN
 END;
 /
 
+
+
+CREATE OR REPLACE FUNCTION RT03_InvoiceDue(p_invoice IN NUMBER)
+RETURN NUMBER
+IS
+    v_total NUMBER;
+BEGIN
+    IF p_invoice IS NULL THEN
+        RETURN 0;
+    END IF;
+
+    SELECT NVL(SUM(Units * ChargedPrice * (1 - DiscountPct / 100)), 0)
+    INTO v_total
+    FROM RT03_Line
+    WHERE InvoiceNo = p_invoice;
+
+    RETURN ROUND(v_total, 2);
+END;
+
+
+
+
+
+

@@ -32,3 +32,11 @@ BEGIN
 END;
 /
 
+CREATE OR REPLACE VIEW RT02_ReorderList AS
+SELECT
+    BinID,
+    SKU,
+    (ReorderAt - OnHand) AS MissingUnits
+FROM RT02_Bin
+WHERE OnHand < ReorderAt;
+

@@ -32,3 +32,10 @@ BEGIN
 END;
 /
 
+CREATE OR REPLACE VIEW RT04_LateDispatches AS
+SELECT
+    DispatchID,
+    (TRUNC(DeliveredOn) - TRUNC(PromisedOn)) AS LateDays
+FROM RT04_Dispatch
+WHERE DeliveredOn IS NOT NULL
+  AND TRUNC(DeliveredOn) > TRUNC(PromisedOn);

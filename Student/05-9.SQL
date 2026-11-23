@@ -32,3 +32,18 @@ BEGIN
 END;
 /
 
+CREATE OR REPLACE TRIGGER RT05_CostFloor
+BEFORE INSERT OR UPDATE OF Cost, SalePrice
+ON RT05_CostCard
+FOR EACH ROW
+BEGIN
+    IF :NEW.SalePrice < :NEW.Cost THEN
+        RAISE_APPLICATION_ERROR(-20105, 'SalePrice cannot be below Cost');
+    END IF;
+END;
+/
+
+
+
+
+

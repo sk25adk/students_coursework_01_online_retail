@@ -32,3 +32,15 @@ BEGIN
 END;
 /
 
+
+CREATE OR REPLACE VIEW RT06_TillTotals AS
+SELECT
+    TillCode,
+    NVL(SUM(CASE WHEN Method = 'CASH' THEN Amount END), 0) AS CashTotal,
+    NVL(SUM(CASE WHEN Method = 'CARD' THEN Amount END), 0) AS CardTotal
+FROM RT06_Tender
+GROUP BY TillCode;
+
+
+
+

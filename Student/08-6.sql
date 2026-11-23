@@ -32,3 +32,32 @@ BEGIN
 END;
 /
 
+
+CREATE OR REPLACE PROCEDURE RT08_ApproveOffer(
+    p_quote   IN NUMBER,
+    p_percent IN NUMBER
+)
+IS
+    v_dummy NUMBER;
+BEGIN
+    IF p_percent IS NULL OR p_percent < 0 OR p_percent > 30 THEN
+        RAISE_APPLICATION_ERROR(-20108, 'Invalid quote or percent');
+    END IF;
+
+    -- Lock the target quote row to prevent conflicting concurrent updates.
+    SELECT 1
+    INTO v_dummy
+    FROM RT08_Quote
+    WHERE QuoteID = p_quote
+      AND ValidUntil >= TRUNC(SYSDATE)
+    FOR UPDATE;
+
+    UPDATE RT08_Quote
+    SET OfferedPercent = p_percent
+    WHERE QuoteID = p_quote;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RAISE_APPLICATION_ERROR(-20108, 'Invalid quote or percent');
+END;
+/

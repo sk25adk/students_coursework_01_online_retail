@@ -32,3 +32,29 @@ BEGIN
 END;
 /
 
+
+
+CREATE OR REPLACE FUNCTION RT07_Carriage(p_weight IN NUMBER)
+RETURN NUMBER
+IS
+    v_match_count NUMBER;
+    v_charge      NUMBER;
+BEGIN
+    IF p_weight IS NULL OR p_weight <= 0 THEN
+        RAISE_APPLICATION_ERROR(-20107, 'Weight must be greater than zero');
+    END IF;
+
+    SELECT COUNT(*), MIN(Charge)
+    INTO v_match_count, v_charge
+    FROM RT07_Slab
+    WHERE p_weight > FromWeight
+      AND p_weight <= ToWeight;
+
+    IF v_match_count = 0 THEN
+        RAISE_APPLICATION_ERROR(-20108, 'No matching weight band');
+    ELSIF v_match_count > 1 THEN
+        RAISE_APPLICATION_ERROR(-20109, 'Multiple matching weight bands');
+    END IF;
+
+    RETURN v_charge;
+END;
