@@ -39,11 +39,8 @@ END;
 /
 
 CREATE OR REPLACE VIEW RT01_ClearancePrices AS
-SELECT
-    ProductCode,
-    Price
-FROM RT01_PriceCard
-WHERE Clearance = 1
-  AND Price <= 20;
+SELECT PRODUCTCODE, PRICE FROM RT01_PriceCard WHERE CLEARANCE = 1 AND PRICE <= 20;
+
+
 
 
